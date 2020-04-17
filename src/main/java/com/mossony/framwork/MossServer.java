@@ -3,12 +3,14 @@ package com.mossony.framwork;
 import com.mossony.framwork.postman.PostManServlet;
 
 import javax.inject.Inject;
+import javax.servlet.DispatcherType;
 import javax.servlet.ServletException;
 
 import io.undertow.Undertow;
 import io.undertow.server.HttpHandler;
 import io.undertow.servlet.api.DeploymentInfo;
 import io.undertow.servlet.api.DeploymentManager;
+import io.undertow.servlet.api.FilterInfo;
 import io.undertow.servlet.util.ImmediateInstanceHandle;
 import lombok.extern.slf4j.Slf4j;
 
@@ -34,6 +36,8 @@ public class MossServer {
                     .setClassLoader(this.getClass().getClassLoader())
                     .setContextPath("/")
                     .setDeploymentName(this.getClass().getSimpleName())
+                    .addFilter(new FilterInfo("CORS",CORSFilter.class))
+                    .addFilterUrlMapping("CORS","/*", DispatcherType.REQUEST)
                     .addServlets(servlet("postman", PostManServlet.class, () -> new ImmediateInstanceHandle(postManServlet)).addMapping("/postman"))
                     .addServlets(servlet("MossServlet", MossServlet.class, () -> new ImmediateInstanceHandle(mossServlet)).addMapping("/*"));
 

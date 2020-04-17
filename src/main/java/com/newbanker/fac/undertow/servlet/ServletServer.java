@@ -36,22 +36,24 @@ public class ServletServer extends MossServer {
     public static void main(final String[] args) {
         long start = System.currentTimeMillis();
 
-        Injector injector = Guice.createInjector(new MyBatisModule() {
-            @Override
-            protected void initialize() {
-                try {
-                    Properties properties = new Properties();
-                    InputStream resourceAsStream = getClass().getClassLoader().getResourceAsStream("application.properties");
-                    properties.load(resourceAsStream);
-                    Names.bindProperties(binder(), properties);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                bindDataSourceProviderType(DruidDataSourceProvider.class);
-                bindTransactionFactoryType(JdbcTransactionFactory.class);
-                addMapperClasses("com.newbanker.fac.undertow.servlet.dao");
-            }
-        });
+        Injector injector = Guice.createInjector(
+//                new MyBatisModule() {
+//            @Override
+//            protected void initialize() {
+////                try {
+////                    Properties properties = new Properties();
+////                    InputStream resourceAsStream = getClass().getClassLoader().getResourceAsStream("application.properties");
+////                    properties.load(resourceAsStream);
+////                    Names.bindProperties(binder(), properties);
+////                } catch (IOException e) {
+////                    e.printStackTrace();
+////                }
+////                bindDataSourceProviderType(DruidDataSourceProvider.class);
+////                bindTransactionFactoryType(JdbcTransactionFactory.class);
+////                addMapperClasses("com.newbanker.fac.undertow.servlet.dao");
+////            }
+//        }
+        );
 
         injector.getInstance(ServletServer.class).startServer(8080);
 
