@@ -3,6 +3,8 @@ package com.newbanker.fac.undertow.servlet.controller;
 import com.newbanker.fac.undertow.model.Animal;
 
 import javax.inject.Singleton;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * @Author roger
@@ -14,6 +16,21 @@ public class AnimalDogController {
     public Animal get(Integer age, String name) {
         Animal build = Animal.builder().name(name).age(age).build();
         return build;
+    }
+
+    public void getHello(HttpServletResponse resp) throws IOException {
+        resp.getWriter().write("<!DOCTYPE html>\n" +
+                "<html lang=\"en\">\n" +
+                "<head>\n" +
+                "    <meta charset=\"UTF-8\">\n" +
+                "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n" +
+                "    <title>Document</title>\n" +
+                "</head>\n" +
+                "<body>\n" +
+                "    <h3>hello world</h3>\n" +
+                "</body>\n" +
+                "</html>");
+        resp.flushBuffer();
     }
 
 

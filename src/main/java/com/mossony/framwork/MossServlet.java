@@ -55,7 +55,7 @@ public class MossServlet extends HttpServlet {
 
             ParameterMethod pm = controllerMapper.getRequest2MethodMap().get(req.getMethod()).get(requestURI);
 
-            Object[] args = parseParams(req, pm);
+            Object[] args = parseParams(req, resp, pm);
 
             Object data = invokeControllerMethod(pm, args);
 
@@ -75,25 +75,32 @@ public class MossServlet extends HttpServlet {
 
     private void response(HttpServletResponse resp, Object result) {
         try {
-            resp.setCharacterEncoding(DEFAULT_CHARSET);
-            resp.setContentType(APPLICATION_JSON_VALUE);
-            OutputStream outputStream = resp.getOutputStream();
-            String jsonString = JSONObject.toJSONString(result);
-            outputStream.write(jsonString.getBytes(Charset.forName(DEFAULT_CHARSET)));
-            outputStream.flush();
-            outputStream.close();
+            if (!resp.isCommitted()) {
+                resp.setCharacterEncoding(DEFAULT_CHARSET);
+                resp.setContentType(APPLICATION_JSON_VALUE);
+                OutputStream outputStream = resp.getOutputStream();
+                String jsonString = JSONObject.toJSONString(result);
+                outputStream.write(jsonString.getBytes(Charset.forName(DEFAULT_CHARSET)));
+                outputStream.flush();
+                outputStream.close();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private Object[] parseParams(HttpServletRequest req, ParameterMethod pm) throws IOException {
+    private Object[] parseParams(HttpServletRequest req, HttpServletResponse resp, ParameterMethod pm) throws IOException {
         Parameter[] parameters = pm.getParams();
         int paramLength = parameters.length;
         Object[] params = new Object[paramLength];
         for (int i = 0; i < paramLength; i++) {
             String name = parameters[i].getName();
-            if (name.equals("body")) {
+            Class<?> type = parameters[i].getType();
+            if (type.isAssignableFrom(HttpServletRequest.class)) {
+                params[i] = req;
+            } else if (type.isAssignableFrom(HttpServletResponse.class)) {
+                params[i] = resp;
+            } else if (name.equals("body")) {
                 params[i] = JSONObject.parseObject(req.getInputStream(), parameters[i].getType());
             } else {
                 String value = req.getParameter(name);
