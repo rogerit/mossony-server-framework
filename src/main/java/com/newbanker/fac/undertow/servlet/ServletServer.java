@@ -1,5 +1,7 @@
 package com.newbanker.fac.undertow.servlet;
 
+import com.mossony.framwork.module.MybatisModule;
+import com.mossony.framwork.module.PropertiesModule;
 import com.newbanker.fac.undertow.servlet.dao.UserMapper;
 import com.newbanker.fac.undertow.servlet.dao.model.User;
 
@@ -29,32 +31,15 @@ import lombok.extern.slf4j.Slf4j;
  * @Date $ $
  */
 @Slf4j
-
 public class ServletServer extends MossServer {
 
     @Transactional
     public static void main(final String[] args) {
         long start = System.currentTimeMillis();
 
-        Injector injector = Guice.createInjector(
-//                new MyBatisModule() {
-//            @Override
-//            protected void initialize() {
-////                try {
-////                    Properties properties = new Properties();
-////                    InputStream resourceAsStream = getClass().getClassLoader().getResourceAsStream("application.properties");
-////                    properties.load(resourceAsStream);
-////                    Names.bindProperties(binder(), properties);
-////                } catch (IOException e) {
-////                    e.printStackTrace();
-////                }
-////                bindDataSourceProviderType(DruidDataSourceProvider.class);
-////                bindTransactionFactoryType(JdbcTransactionFactory.class);
-////                addMapperClasses("com.newbanker.fac.undertow.servlet.dao");
-////            }
-//        }
-        );
+        Injector injector = Guice.createInjector(new PropertiesModule(), new MybatisModule("com.newbanker.fac.undertow.servlet.dao"));
 
+        log.info("start");
         injector.getInstance(ServletServer.class).startServer(8080);
 
         log.info("启动时间{}ms", System.currentTimeMillis() - start);

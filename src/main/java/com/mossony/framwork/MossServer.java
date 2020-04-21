@@ -1,5 +1,6 @@
 package com.mossony.framwork;
 
+import com.mossony.framwork.filter.CORSFilter;
 import com.mossony.framwork.postman.PostManServlet;
 
 import javax.inject.Inject;
@@ -36,7 +37,7 @@ public class MossServer {
                     .setClassLoader(this.getClass().getClassLoader())
                     .setContextPath("/")
                     .setDeploymentName(this.getClass().getSimpleName())
-                    .addFilter(new FilterInfo("CORS",CORSFilter.class))
+                    .addFilter(new FilterInfo("CORS", CORSFilter.class))
                     .addFilterUrlMapping("CORS","/*", DispatcherType.REQUEST)
                     .addServlets(servlet("postman", PostManServlet.class, () -> new ImmediateInstanceHandle(postManServlet)).addMapping("/postman"))
                     .addServlets(servlet("MossServlet", MossServlet.class, () -> new ImmediateInstanceHandle(mossServlet)).addMapping("/*"));
