@@ -1,30 +1,12 @@
 package com.newbanker.fac.undertow.servlet;
 
-import com.mossony.framwork.module.MybatisModule;
-import com.mossony.framwork.module.PropertiesModule;
-import com.newbanker.fac.undertow.servlet.dao.UserMapper;
-import com.newbanker.fac.undertow.servlet.dao.model.User;
-
-import com.google.inject.Binder;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.google.inject.Module;
-import com.google.inject.name.Names;
 import com.mossony.framwork.MossServer;
-
-import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.session.SqlSessionFactory;
-import org.apache.ibatis.session.SqlSessionManager;
-import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
-import org.mybatis.guice.MyBatisModule;
-import org.mybatis.guice.datasource.druid.DruidDataSourceProvider;
-import org.mybatis.guice.transactional.Transactional;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
-
+import com.mossony.framwork.module.MybatisModule;
+import com.mossony.framwork.module.PropertiesModule;
 import lombok.extern.slf4j.Slf4j;
+import org.mybatis.guice.transactional.Transactional;
 
 /**
  * @Author roger
