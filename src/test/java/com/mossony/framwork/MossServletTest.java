@@ -1,8 +1,5 @@
 package com.mossony.framwork;
 
-import com.google.inject.Injector;
-import com.mossony.framwork.module.MybatisModule;
-import com.mossony.framwork.module.PropertiesModule;
 import com.newbanker.fac.undertow.servlet.controller.AnimalDogController;
 import com.newbanker.fac.undertow.servlet.dao.UserMapper;
 import com.newbanker.fac.undertow.servlet.dao.model.User;

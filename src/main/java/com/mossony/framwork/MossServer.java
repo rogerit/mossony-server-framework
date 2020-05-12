@@ -56,8 +56,8 @@ public class MossServer {
              * prefix: asserts
              * suffix: .css .js
              */
-            ResourceHandler resourceHandler = Handlers.resource(new ClassPathResourceManager(this.getClass().getClassLoader(),"asserts"));
-            PredicateHandler predicateHandler = Handlers.predicate(Predicates.suffixes(".css", ".js"), resourceHandler, servletHandler);
+            ResourceHandler resourceHandler = Handlers.resource(new ClassPathResourceManager(this.getClass().getClassLoader(), "asserts"));
+            PredicateHandler predicateHandler = Handlers.predicate(Predicates.suffixes(".css", ".js", ".ico"), resourceHandler, servletHandler);
 
             Undertow server = Undertow.builder()
                     .addHttpListener(port, "0.0.0.0")

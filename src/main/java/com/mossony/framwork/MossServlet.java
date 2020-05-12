@@ -2,25 +2,26 @@ package com.mossony.framwork;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.ImmutableMap;
-
-import java.io.IOException;
-import java.io.OutputStream;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Parameter;
-import java.nio.charset.Charset;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.Function;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Parameter;
+import java.nio.charset.Charset;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Function;
 
 /**
  * @Author roger
@@ -41,11 +42,16 @@ public class MossServlet extends HttpServlet {
         objectObjectHashMap.put(Long.class, Long::valueOf);
         objectObjectHashMap.put(Double.class, Double::valueOf);
         objectObjectHashMap.put(Boolean.class, Boolean::valueOf);
+        objectObjectHashMap.put(LocalDate.class, LocalDate::parse);
+        objectObjectHashMap.put(LocalDateTime.class, LocalDateTime::parse);
         converterMap = ImmutableMap.copyOf(objectObjectHashMap);
     }
 
     @Inject
     private ControllerMapper controllerMapper;
+
+    @Inject
+    HeaderInvoker invoker;
 
     @Override
     protected void doGet(final HttpServletRequest req, final HttpServletResponse resp) {
@@ -57,21 +63,17 @@ public class MossServlet extends HttpServlet {
 
             Object[] args = parseParams(req, resp, pm);
 
-            Object data = invokeControllerMethod(pm, args);
+            Object data = invoker.invoke0(req, resp, pm, args);
 
             result = Response.success(data);
-        } catch (MossException e) {
-            result = Response.error(e);
         } catch (Exception e) {
             result = new Response(e.getMessage(), -1, null);
+            e.printStackTrace();
         } finally {
             response(resp, result);
         }
     }
 
-    private Object invokeControllerMethod(ParameterMethod pm, Object[] args) throws InvocationTargetException, IllegalAccessException, MossException {
-        return pm.invoke(args);
-    }
 
     private void response(HttpServletResponse resp, Object result) {
         try {
