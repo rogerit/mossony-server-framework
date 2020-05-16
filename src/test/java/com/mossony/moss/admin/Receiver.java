@@ -1,4 +1,4 @@
-package com.newbanker.fac;
+package com.mossony.moss.admin;
 
 import com.rabbitmq.client.*;
 

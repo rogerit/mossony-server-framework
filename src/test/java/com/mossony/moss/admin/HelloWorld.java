@@ -1,4 +1,4 @@
-package com.newbanker.fac;
+package com.mossony.moss.admin;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
@@ -6,6 +6,8 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import org.junit.Test;
+
+import java.util.Collections;
 
 public class HelloWorld {
 
@@ -17,7 +19,6 @@ public class HelloWorld {
             String token = JWT.create()
                     .withIssuer("moss")
                     .withSubject("roger")
-                    .withKeyId("0db3d2bf8a2011eaa4d228d2441b248c")
                     .sign(algorithm);
             JWTVerifier me = JWT.require(algorithm).build();
             DecodedJWT verify = me.verify(token);

@@ -67,7 +67,7 @@ public class MossServlet extends HttpServlet {
 
             result = Response.success(data);
         } catch (Exception e) {
-            result = new Response(e.getMessage(), -1, null);
+            result = new Response(e.getMessage(), -1, e.getClass().getSimpleName());
             e.printStackTrace();
         } finally {
             response(resp, result);
