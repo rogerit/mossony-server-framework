@@ -161,6 +161,6 @@ public class PostManParser {
             return LocalDate.now();
         if (URI.class.isAssignableFrom(clazz))
             return URI.create("http://mossony.com");
-        return null;
+        return "null";
     }
 }
