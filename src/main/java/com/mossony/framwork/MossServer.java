@@ -45,6 +45,7 @@ public class MossServer {
             mossServlet.setMultipartConfig(new MultipartConfigElement(System.getProperty("java.io.tmpdir")));
             ServletInfo postmanServlet = servlet("postman", PostManServlet.class, () -> new ImmediateInstanceHandle(postManServlet)).addMapping("/postman");
             DeploymentInfo servletBuilder = deployment()
+                    .setDefaultEncoding("UTF-8")
                     .setClassLoader(this.getClass().getClassLoader())
                     .setContextPath("/")
                     .setDeploymentName(this.getClass().getSimpleName())
