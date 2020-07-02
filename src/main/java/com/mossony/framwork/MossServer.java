@@ -4,6 +4,7 @@ import com.mossony.framwork.filter.CORSFilter;
 import com.mossony.framwork.postman.PostManServlet;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.servlet.DispatcherType;
 import javax.servlet.MultipartConfigElement;
 import javax.servlet.ServletException;
@@ -39,7 +40,11 @@ public class MossServer {
     @Inject
     private MossServlet mossServlet;
 
-    public void startServer(int port) {
+    @Inject
+    @Named("moss.server.port")
+    private String port;
+
+    public void startServer() {
         try {
             ServletInfo mossServlet = servlet("MossServlet", MossServlet.class, () -> new ImmediateInstanceHandle(this.mossServlet)).addMapping("/*");
             mossServlet.setMultipartConfig(new MultipartConfigElement(System.getProperty("java.io.tmpdir")));
@@ -66,7 +71,7 @@ public class MossServer {
             PredicateHandler predicateHandler = Handlers.predicate(Predicates.suffixes(".css", ".js", ".ico"), resourceHandler, servletHandler);
 
             Undertow server = Undertow.builder()
-                    .addHttpListener(port, "0.0.0.0")
+                    .addHttpListener(Integer.parseInt(port), "0.0.0.0")
                     .setHandler(predicateHandler)
                     .build();
 
