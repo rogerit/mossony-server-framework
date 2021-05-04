@@ -24,6 +24,11 @@ import io.undertow.servlet.api.ServletInfo;
 import io.undertow.servlet.util.ImmediateInstanceHandle;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.File;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+
 import static io.undertow.servlet.Servlets.defaultContainer;
 import static io.undertow.servlet.Servlets.deployment;
 import static io.undertow.servlet.Servlets.servlet;
@@ -76,8 +81,8 @@ public class MossServer {
                     .build();
 
             server.start();
-        } catch (ServletException e) {
-            throw new RuntimeException(e);
+        } catch (ServletException servletException) {
+
         }
     }
 }

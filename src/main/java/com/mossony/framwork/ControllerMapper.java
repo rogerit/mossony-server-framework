@@ -95,7 +95,7 @@ public class ControllerMapper {
         return pathPrefix;
     }
 
-    private String[] packageClassNames() throws IOException {
+    public static String[] packageClassNames() throws IOException {
         Pattern pattern = Pattern.compile(".*\\." + CONTROLLER_PACKAGE_SUFFIX + "\\..*" + CONTROLLER_CLASS_SUFFIX_REGEX);
 
         ImmutableSet<ClassPath.ClassInfo> allClasses = ClassPath.from(MossServlet.class.getClassLoader()).getAllClasses();
