@@ -79,8 +79,8 @@ public class MossServer {
                     .addHttpListener(Integer.parseInt(port), "0.0.0.0")
                     .setHandler(predicateHandler)
                     .build();
-
             server.start();
+            log.info("http://127.0.0.1:{}", port);
         } catch (ServletException servletException) {
 
         }

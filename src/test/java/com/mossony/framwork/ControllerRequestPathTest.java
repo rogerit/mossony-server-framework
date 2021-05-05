@@ -1,27 +1,9 @@
 package com.mossony.framwork;
 
-import com.mossony.framwork.example.DemoServer;
 import org.junit.Test;
-
-import java.util.List;
 
 public class ControllerRequestPathTest {
 
-    @Test
-    public void testRestfullMapping() throws ClassNotFoundException {
-
-        List<String> controllers = new RequestControllerMapping().packageClassNames(DemoServer.class.getPackage().getName());
-        System.out.println(controllers);
-        String ctrl = controllers.get(0);
-
-        Class<?> aClass = Class.forName(ctrl);
-
-        System.out.println(aClass);
-        String c = pathingCamelName(ctrl);
-
-        System.out.println(c);
-
-    }
 
     @Test
     public void testPathingCamelName() {

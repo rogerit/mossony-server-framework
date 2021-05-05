@@ -1,21 +1,20 @@
 package com.mossony.framwork;
 
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.reflect.ClassPath;
 import com.google.inject.Injector;
-
-import java.io.IOException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.regex.Pattern;
+import lombok.Getter;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
-import lombok.Getter;
+import java.io.File;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.net.URL;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @Author roger
@@ -28,7 +27,6 @@ public class ControllerMapper {
     public static final String REQ_POST = "POST";
     public static final String REQ_PUT = "PUT";
     public static final String REQ_DELETE = "DELETE";
-    public static final String CONTROLLER_PACKAGE_SUFFIX = "controller";
     public static final String CONTROLLER_CLASS_SUFFIX_REGEX = "Controller$";
 
     @Getter
@@ -44,14 +42,14 @@ public class ControllerMapper {
                                                  REQ_PUT, new HashMap<>(),
                                                  REQ_DELETE, new HashMap<>());
         try {
-            String[] classNames = packageClassNames();
+            List<String> classNames = packageClassNames();
             mapControllers(classNames);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void mapControllers(String[] controllerClassNames) throws ClassNotFoundException {
+    private void mapControllers(List<String> controllerClassNames) throws ClassNotFoundException {
         for (String cname : controllerClassNames) {
             mapperController(cname);
         }
@@ -95,13 +93,31 @@ public class ControllerMapper {
         return pathPrefix;
     }
 
-    public static String[] packageClassNames() throws IOException {
-        Pattern pattern = Pattern.compile(".*\\." + CONTROLLER_PACKAGE_SUFFIX + "\\..*" + CONTROLLER_CLASS_SUFFIX_REGEX);
-
-        ImmutableSet<ClassPath.ClassInfo> allClasses = ClassPath.from(MossServlet.class.getClassLoader()).getAllClasses();
-
-        return allClasses.stream().filter(x -> pattern.matcher(x.getName()).matches()).map(x -> x.getName()).toArray(String[]::new);
+    private String getMainPackage() {
+        for (StackTraceElement ste:Thread.currentThread().getStackTrace()){
+            if (ste.getMethodName().equals("main")){
+                String className = ste.getClassName();
+                return className.substring(0,className.lastIndexOf('.'));
+            }
+        }
+        return null;
     }
 
+    private List<String> packageClassNames() {
+        String basePackage = getMainPackage();
+
+        String pkgPath = basePackage.replace('.', '/');
+
+        URL ctrlUrl = this.getClass().getResource("/" + pkgPath + "/controller");
+
+        String[] controllers = new File(ctrlUrl.getPath()).list();
+
+        List<String> ctrlClasses = Arrays.asList(controllers).stream()
+                .filter(ctrl -> ctrl.endsWith("Controller.class"))
+                .map(ctrl -> basePackage + ".controller." + ctrl.replace(".class", ""))
+                .collect(Collectors.toList());
+
+        return ctrlClasses;
+    }
 
 }
